@@ -10,6 +10,8 @@ import SoftInput from "components/SoftInput";
 import "../modal.css";
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { DataGrid, GridRowsProp } from "@mui/x-data-grid";
+import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
 import axios from "axios";
 
 // const rows = [
@@ -146,7 +148,7 @@ function ProductionOrderList() {
       width: 150,
     },
   ];
-  const rows = [
+  const initialList = [
     {
       id: 1,
       status: "Success",
@@ -232,55 +234,143 @@ function ProductionOrderList() {
   //   axios.get("http://localhost:8003/ProductionOrderAPI").then((res) => setMyData(res.data));
   // }, []);
 
+  //const [list, setList] = useState([]);
+  //const [myData, setMyData] = useState(0);
+
+  //   const applyProdFilter = () => {
+  //     //setList(rows);
+
+  //     // fetch("http://localhost:8003/ProductionOrderAPI")
+  //     //   .then((response) => response.json())
+  //     //   .then((json) => setList(json));
+  //     //  axios
+  //     //    .get("http://localhost:8003/ProductionOrderAPI")
+  //     //    //.then(function (response) {
+
+  //     //         setList(response.data)
+  // //  //const data = response.data;
+  // //       //console.log(response.data);
+
+  // //       //const newList = data;
+  // //       // const newList = list.map((row) => {
+  // //       //   if (data[id] === 0) {
+  // //       //     console.log(data[id]);
+  // //       //     setList(rows);
+  // //       //     return row;
+  // //       //   } else {
+  // //       //     const data = response.data;
+  // //       //     const newList = list.map((row) => {
+  // //       //       if (data[id] === 0) {
+  // //       //         console.log(data[id]);
+  // //       //         const updatedId = {
+  // //       //           ...data,
+  // //       //           row: data[id],
+  // //       //         };
+  // //       //         return updatedId;
+  // //       //       }
+
+  // //       //       return id;
+  // //       //     });
+  // //       //     setList(newList);
+  // //       //     //console.log(newList);
+  // //       //     //console.log(initialList);
+  // //       //   }
+  //       // });
+  //         })
+  //        .catch(function (error) {
+  //         setList(initialList);
+  //          console.log(error);
+  //          console.log(initialList);
+  //        });
+  //   });
+  //   }
+  // const LoadingSkeleton = () => (
+  //   <Box>
+  //     {[...data(4)].map((_, index) => (
+  //       <Skeleton key={index} />
+  //     ))}
+  //   </Box>
+  // );
+
   const [list, setList] = useState([]);
-  const [myData, setMyData] = useState(0);
 
   const applyProdFilter = () => {
-    //setList(rows);
-
-    // fetch("http://localhost:8003/ProductionOrderAPI")
-    //   .then((response) => response.json())
-    //   .then((json) => setList(json));
     axios
       .get("http://localhost:8003/ProductionOrderAPI")
       .then(function (response) {
         const data = response.data;
-        //const newList = data;
-        const newList = list.map((row) => {
-          if (data[id] === 0) {
-            console.log(data[id]);
-            setList(rows);
-            return row;
-          } else {
-            const data = response.data;
-            const newList = list.map((row) => {
-              if (data[id] === 0) {
-                console.log(data[id]);
-                const updatedId = {
-                  ...data,
-                  row: data[id],
-                };
-                return updatedId;
-              }
 
-              return id;
-            });
-            setList(newList);
-            //console.log(newList);
-            //console.log(initialList);
+        console.log("first API list", data); //showing the data
+        console.log("docEntry", data[0].docEntry); //showing the data
+        console.log("docEntry", data[1].docEntry); //showing the data
+        console.log("docEntry", data[2].docEntry); //showing the data
+        console.log("docEntry", data[3].docEntry); //showing the data
+        var id = 0;
+
+        // <Box>
+        //   {[...Array(4)].map((_, index) => (
+        //     <Skeleton key={index} index={index} />
+        //   ))}
+        // </Box>;
+
+        const newList = list.map((id) => {
+          var id = 0;
+          console.log("Arrow function row", row);
+          console.log("id", id);
+
+          if (data[id].docEntry) {
+            console.log("inside if", data[id].docEntry);
+            const updatedItem = {
+              ...data[id],
+              docEntry: data[id].docEntry,
+            };
+            return updatedItem;
           }
+          return field;
+
+          // console.log("newlist", id); // Showing Empty Array***
+
+          // if (data[id.index]) {
+          //   console.log("insideif", data[id.index]); // not entering
+
+          //   const updatedId = {
+          //     ...id,
+          //     warehouse: data[id.index],
+          //   };
+          //   return updatedId;
+          // }
+          // return id;
         });
+        setList(newList);
+        console.log("setlist", newList); // showing Empty Array***
       })
       .catch(function (error) {
-        setList(initialList);
-        console.log(error);
-        console.log(initialList);
+        console.log("this the error", error); //not showing error .then is getting the data
       });
+
+    //console.log(data.itemCode);
+
+    // .then((data) => {
+    //   setList(data);
+    //   console.log(data);
+    // });
   };
 
-  useLayoutEffect(() => {
+  //console.log(list);
+
+  useEffect(() => {
     applyProdFilter();
+    //   fetch("http://localhost:8003/ProductionOrderAPI")
+    //     .then((response) => {
+    //       const data = response.data;
+    //       data = data.json();
+    //       console.log(data);
+    //     })
+
+    //     .then((data) => setList(data));
   }, []);
+
+  //console.log(list);
 
   const [modal, setModal] = useState(false);
 
@@ -414,7 +504,7 @@ function ProductionOrderList() {
         </Grid>
         <SoftBox mt={6}>
           <SoftButton
-            onClick={applyProdFilter}
+            //onClick={applyProdFilter}
             variant="contained"
             color="info"
             style={{
@@ -434,17 +524,23 @@ function ProductionOrderList() {
         </SoftBox>
         <SoftBox ml={5} mt={5} style={{ marginRight: "50px", height: "400px" }}>
           <DataGrid
-            {...list}
+            // {...list}
             loading={!list.length}
             checkboxSelection
-            rows={list}
+            //rows={initialList}
+            rows={list} // it is loading
             //rows={{ ...list }} //output- norows
-            getRowId={(row) => row.id} //mandatory
+            getRowId={(row) => {
+              console.log(row.id);
+            }} //mandatory
             columns={columns}
             //rowReordering
             pageSize={5}
             rowsPerPageOptions={[5]}
             sx={{ color: "darkblue" }}
+            // components={{
+            //   LoadingOverlay: applyProdFilter,
+            // }}
             // getRowId={applyProdFilter()}
           />
         </SoftBox>
