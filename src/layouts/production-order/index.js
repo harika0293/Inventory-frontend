@@ -14,91 +14,6 @@ import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import axios from "axios";
 
-// const rows = [
-//   {
-//     id: 1,
-//     status: "Success",
-//     docEntry: 1,
-//     docNum: 1,
-//     postDate: "2022-08-19T00:00:00",
-//     warehouse: "GEN01",
-//     itemCode: "S1015_300851300_M9502",
-//     itemName: "ROLLER TBLE SUPPORT",
-//     plannedQty: "9262.700000",
-//     objectType: "202",
-//   },
-//   {
-//     id: 2,
-//     status: "Success",
-//     docEntry: 2,
-//     docNum: 2,
-//     postDate: "2022-09-16T00:00:00",
-//     warehouse: "GEN01",
-//     itemCode: "CS00018",
-//     itemName: "Cadmium Bolt Nut with Double Washer 12 X 50 mm",
-//     plannedQty: "1.000000",
-//     objectType: "202",
-//   },
-//   {
-//     id: 3,
-//     status: "Success",
-//     docEntry: 3,
-//     docNum: 3,
-//     postDate: "2022-09-16T00:00:00",
-//     warehouse: "GEN01",
-//     itemCode: "CS00018",
-//     itemName: "Cadmium Bolt Nut with Double Washer 12 X 50 mm",
-//     plannedQty: "1.000000",
-//     objectType: "202",
-//   },
-//   {
-//     id: 4,
-//     status: "Success",
-//     docEntry: 4,
-//     docNum: 4,
-//     postDate: "2022-09-16T00:00:00",
-//     warehouse: "GEN01",
-//     itemCode: "CS00018",
-//     itemName: "Cadmium Bolt Nut with Double Washer 12 X 50 mm",
-//     plannedQty: "1.000000",
-//     objectType: "202",
-//   },
-// ];
-
-// const getFilter1 = () => {
-//   var date = moment(new Date()).format('DD/MM/YYYY');
-//   setList(initialList);
-
-//   axios
-//     .post('https://us-central1-docker-347218.cloudfunctions.net/Data-API', {
-//       date: date,
-//       email: 'dereckjos12@gmail.com',
-//       password: 'Vigilance@001',
-//     })
-//     .then(function (response) {
-//       const data = response.data;
-//       const newList = list.map(item => {
-//         if (data[item.index]) {
-//           const updatedItem = {
-//             ...item,
-//             steps: data[item.index],
-//           };
-//           return updatedItem;
-//         }
-//         return item;
-//       });
-//       setList(newList);
-//       setLoading(false);
-//     })
-//     .catch(function (error) {
-//       //console.log(error);
-//     });
-// };
-
-// useLayoutEffect(() => {
-//   getFilter1();
-// }, []);
-
 function ProductionOrderList() {
   const text = {
     color: "#0B2F8A",
@@ -107,51 +22,47 @@ function ProductionOrderList() {
     marginRight: "10px",
   };
 
-  const columns = [
-    { field: "id", headerName: "User ID", width: 90 },
+  const [list, setList] = useState([]);
 
-    { field: "docNum", headerName: "ORDER NO", width: 100 },
+  // const [fromDateOne, setFromDateOne] = useState("");
+  // const [toDateTwo, setToDateTwo] = useState("");
+  //const [status, setStatus] = useState("");
+
+  // const [warehouse, setWarehouse] = useState("");
+  // const [series, setSeries] = useState("");
+  // const [docNum, setDocNum] = useState("");
+
+  const columns = [
+    { field: "id", headerName: "UID", width: 100 },
+    { field: "docNum", headerName: "PRD ORDER NO", width: 130 },
+    { field: "postDate", headerName: "ORDER DATE", width: 120 },
+    { field: "warehouse", headerName: "WAREHOUSE", width: 120 },
     {
-      //id: "ID",
+      field: "itemCode",
+      headerName: "PRODUCTION ITEM CODE",
+      width: 210,
+    },
+    {
       field: "itemName",
       headerName: "PRODUCTION ITEM NAME",
       width: 300,
     },
-    { field: "postDate", headerName: "ORDER DATE", width: 120 },
-    { field: "warehouse", headerName: "WAREHOUSE", width: 120 },
-
     {
-      //id: "ID",
-      field: "itemCode",
-      headerName: "PRODUCTION ITEM CODE",
-      width: 200,
-    },
-    {
-      //id: "ID",
       field: "plannedQty",
       headerName: "PLANNED QUANTITY",
-
       width: 200,
     },
     {
-      //id: "ID",
-      field: "docEntry",
-      headerName: "DOCUMENT ENTRY",
-
-      width: 160,
-    },
-    {
-      //id: "ID",
       field: "objectType",
       headerName: "OBJECT TYPE",
-
+      hideable: false,
       width: 150,
     },
   ];
   const initialList = [
     {
       id: 1,
-      status: "Success",
+
       docEntry: 0,
       docNum: 0,
       postDate: "",
@@ -163,7 +74,7 @@ function ProductionOrderList() {
     },
     {
       id: 2,
-      status: "",
+
       docEntry: 0,
       docNum: 0,
       postDate: "",
@@ -175,7 +86,7 @@ function ProductionOrderList() {
     },
     {
       id: 3,
-      status: "",
+
       docEntry: 0,
       docNum: 0,
       postDate: "",
@@ -187,7 +98,7 @@ function ProductionOrderList() {
     },
     {
       id: 4,
-      status: "",
+
       docEntry: 0,
       docNum: 0,
       postDate: "",
@@ -199,185 +110,59 @@ function ProductionOrderList() {
     },
   ];
 
-  // const applyProdFilter = () => {
-  //   setList(initialList);
+  const applyProdFilter = (e) => {
+    // console.log("from date", fromDateOne);
+    // console.log("to date", toDateTwo);
+    // console.log("status", status);
+    // console.log("warehouse", warehouse);
+    // console.log("series", series);
+    // console.log("docNum", docNum);
 
-  //   axios
-  //     .get("http://localhost:8003/ProductionOrderAPI")
-  //     .then(function (response) {
-  //       const data = response.data;
-  //       const newList = list.map(item => {
-  //         if (data[item.index]) {
-  //           const updatedItem = {
-  //             ...item,
-  //             steps: data[item.index],
-  //           };
-  //           return updatedItem;
-  //         }
-  //         return item;
-  //       });
-  //       setList(newList);
-  //       setLoading(false);
-  //     })
-  //     .catch(function (error) {
-  //       //console.log(error);
-  // setLoading(false);
-  // setList(initialList);
-  //     });
-  // };
+    //e.preventDefault();
 
+    axios
+      .get("http://localhost:8003/ProductionOrderAPI")
+      .then(function (response) {
+        const data = response.data.body;
+
+        console.log("response.data : ", response.data);
+        console.log("Initial List : ", initialList);
+        console.log("response.data.body : ", response.data.body);
+
+        console.log("response.data.body[0] : ", response.data.body[0]);
+
+        console.log("first API list destructure array", data.body[0]); //showing the data
+        console.log("docEntry", data[0].warehouse); //showing the data
+        // console.log("docEntry", data[1].docEntry); //showing the data
+        // console.log("docEntry", data[2].docEntry); //showing the data
+        // console.log("docEntry", data[3].docEntry); //showing the data
+
+        const newList = data;
+
+        const arrayItem = [data[0]];
+
+        console.log("Square Bracket", [arrayItem]);
+
+        console.log("Curly Bracket", { arrayItem });
+        console.log("Curly, Square Brackets", [{ arrayItem }]);
+        console.log("initialList", initialList);
+        console.log("dataAPIList", data);
+
+        setList(newList);
+        console.log("setlist", newList);
+      })
+      .catch(function (error) {
+        console.log("Inside Catch Block", error);
+      });
+  };
   // useLayoutEffect(() => {
   //   applyProdFilter();
   // }, []);
 
-  // useEffect(() => {
-  //   axios.get("http://localhost:8003/ProductionOrderAPI").then((res) => setMyData(res.data));
-  // }, []);
-
-  //const [list, setList] = useState([]);
-  //const [myData, setMyData] = useState(0);
-
-  //   const applyProdFilter = () => {
-  //     //setList(rows);
-
-  //     // fetch("http://localhost:8003/ProductionOrderAPI")
-  //     //   .then((response) => response.json())
-  //     //   .then((json) => setList(json));
-  //     //  axios
-  //     //    .get("http://localhost:8003/ProductionOrderAPI")
-  //     //    //.then(function (response) {
-
-  //     //         setList(response.data)
-  // //  //const data = response.data;
-  // //       //console.log(response.data);
-
-  // //       //const newList = data;
-  // //       // const newList = list.map((row) => {
-  // //       //   if (data[id] === 0) {
-  // //       //     console.log(data[id]);
-  // //       //     setList(rows);
-  // //       //     return row;
-  // //       //   } else {
-  // //       //     const data = response.data;
-  // //       //     const newList = list.map((row) => {
-  // //       //       if (data[id] === 0) {
-  // //       //         console.log(data[id]);
-  // //       //         const updatedId = {
-  // //       //           ...data,
-  // //       //           row: data[id],
-  // //       //         };
-  // //       //         return updatedId;
-  // //       //       }
-
-  // //       //       return id;
-  // //       //     });
-  // //       //     setList(newList);
-  // //       //     //console.log(newList);
-  // //       //     //console.log(initialList);
-  // //       //   }
-  //       // });
-  //         })
-  //        .catch(function (error) {
-  //         setList(initialList);
-  //          console.log(error);
-  //          console.log(initialList);
-  //        });
-  //   });
-  //   }
-  // const LoadingSkeleton = () => (
-  //   <Box>
-  //     {[...data(4)].map((_, index) => (
-  //       <Skeleton key={index} />
-  //     ))}
-  //   </Box>
-  // );
-
-  const [list, setList] = useState([]);
-
-  const applyProdFilter = () => {
-    axios
-      .get("http://localhost:8003/ProductionOrderAPI")
-      .then(function (response) {
-        const data = response.data;
-
-        console.log("first API list", data); //showing the data
-        console.log("docEntry", data[0].docEntry); //showing the data
-        console.log("docEntry", data[1].docEntry); //showing the data
-        console.log("docEntry", data[2].docEntry); //showing the data
-        console.log("docEntry", data[3].docEntry); //showing the data
-        var id = 0;
-
-        // <Box>
-        //   {[...Array(4)].map((_, index) => (
-        //     <Skeleton key={index} index={index} />
-        //   ))}
-        // </Box>;
-
-        const newList = list.map((id) => {
-          var id = 0;
-          console.log("Arrow function row", row);
-          console.log("id", id);
-
-          if (data[id].docEntry) {
-            console.log("inside if", data[id].docEntry);
-            const updatedItem = {
-              ...data[id],
-              docEntry: data[id].docEntry,
-            };
-            return updatedItem;
-          }
-          return field;
-
-          // console.log("newlist", id); // Showing Empty Array***
-
-          // if (data[id.index]) {
-          //   console.log("insideif", data[id.index]); // not entering
-
-          //   const updatedId = {
-          //     ...id,
-          //     warehouse: data[id.index],
-          //   };
-          //   return updatedId;
-          // }
-          // return id;
-        });
-        setList(newList);
-        console.log("setlist", newList); // showing Empty Array***
-      })
-      .catch(function (error) {
-        console.log("this the error", error); //not showing error .then is getting the data
-      });
-
-    //console.log(data.itemCode);
-
-    // .then((data) => {
-    //   setList(data);
-    //   console.log(data);
-    // });
-  };
-
-  //console.log(list);
-
-  useEffect(() => {
-    applyProdFilter();
-    //   fetch("http://localhost:8003/ProductionOrderAPI")
-    //     .then((response) => {
-    //       const data = response.data;
-    //       data = data.json();
-    //       console.log(data);
-    //     })
-
-    //     .then((data) => setList(data));
-  }, []);
-
-  //console.log(list);
-
   const [modal, setModal] = useState(false);
-
   const toggleModal = () => {
     setModal(!modal);
   };
-
   if (modal) {
     document.body.classList.add("active-modal");
   } else {
@@ -401,6 +186,8 @@ function ProductionOrderList() {
               </SoftTypography>
               <SoftInput
                 type="date"
+                // value={fromDateOne}
+                // onChange={(e) => setFromDateOne(e.target.value)}
                 placeholder="Enter From Order Date..."
                 icon={{
                   component: "search",
@@ -417,6 +204,8 @@ function ProductionOrderList() {
               <SoftBox ml={2}>
                 <SoftInput
                   type="date"
+                  // value={toDateTwo}
+                  // onChange={(e) => setToDateTwo(e.target.value)}
                   placeholder="Enter To Order Date..."
                   icon={{
                     component: "search",
@@ -435,6 +224,8 @@ function ProductionOrderList() {
                 <SoftInput
                   type="number"
                   placeholder="Document Number..."
+                  // value={docNum}
+                  // onChange={(e) => setDocNum(e.target.value)}
                   icon={{
                     component: "search",
                     direction: "left",
@@ -453,6 +244,8 @@ function ProductionOrderList() {
               <SoftBox ml={7}>
                 <select
                   id="dropdown"
+                  // value={status}
+                  // onChange={(e) => setStatus(e.target.value)}
                   style={{
                     width: "190px",
                     height: "37px",
@@ -463,8 +256,8 @@ function ProductionOrderList() {
                   <option value="" disabled selected hidden>
                     Enter Order Status...
                   </option>
-                  <option value="1">Planned</option>
-                  <option value="2">Receipt</option>
+                  <option value="planned">Planned</option>
+                  <option value="receipt">Receipt</option>
                 </select>
               </SoftBox>
             </SoftBox>
@@ -477,6 +270,8 @@ function ProductionOrderList() {
               <SoftBox ml={8}>
                 <SoftInput
                   placeholder="Enter Warehouse..."
+                  // value={warehouse}
+                  // onChange={(e) => setWarehouse(e.target.value)}
                   icon={{
                     component: "search",
                     direction: "left",
@@ -493,6 +288,8 @@ function ProductionOrderList() {
               <SoftBox ml={13}>
                 <SoftInput
                   placeholder="Enter Series..."
+                  // value={series}
+                  // onChange={(e) => setSeries(e.target.value)}
                   icon={{
                     component: "search",
                     direction: "left",
@@ -504,7 +301,7 @@ function ProductionOrderList() {
         </Grid>
         <SoftBox mt={6}>
           <SoftButton
-            //onClick={applyProdFilter}
+            onClick={applyProdFilter}
             variant="contained"
             color="info"
             style={{
@@ -524,16 +321,15 @@ function ProductionOrderList() {
         </SoftBox>
         <SoftBox ml={5} mt={5} style={{ marginRight: "50px", height: "400px" }}>
           <DataGrid
-            // {...list}
-            loading={!list.length}
-            checkboxSelection
-            //rows={initialList}
-            rows={list} // it is loading
-            //rows={{ ...list }} //output- norows
-            getRowId={(row) => {
-              console.log(row.id);
-            }} //mandatory
+            //{...list}
             columns={columns}
+            //loading={!list.length}
+            checkboxSelection
+            rows={list} // shows Correct Output
+            //rows={initialList}// shows initial List
+            //rows={{ ...list }} // it is loading
+            //rows={{ ...list }} //output- norows
+            getRowId={(row) => row.id} //mandatory
             //rowReordering
             pageSize={5}
             rowsPerPageOptions={[5]}
