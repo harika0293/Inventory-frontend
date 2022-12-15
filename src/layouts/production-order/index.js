@@ -24,13 +24,13 @@ function ProductionOrderList() {
 
   const [list, setList] = useState([]);
 
-  // const [fromDateOne, setFromDateOne] = useState("");
-  // const [toDateTwo, setToDateTwo] = useState("");
-  //const [status, setStatus] = useState("");
+  const [fromDateOne, setFromDateOne] = useState("");
+  const [toDateTwo, setToDateTwo] = useState("");
+  const [status, setStatus] = useState("");
 
-  // const [warehouse, setWarehouse] = useState("");
-  // const [series, setSeries] = useState("");
-  // const [docNum, setDocNum] = useState("");
+  const [warehouse, setWarehouse] = useState("");
+  const [series, setSeries] = useState("");
+  const [docNum, setDocNum] = useState("");
 
   const columns = [
     { field: "id", headerName: "UID", width: 100 },
@@ -111,19 +111,28 @@ function ProductionOrderList() {
   ];
 
   const applyProdFilter = (e) => {
-    // console.log("from date", fromDateOne);
-    // console.log("to date", toDateTwo);
-    // console.log("status", status);
-    // console.log("warehouse", warehouse);
-    // console.log("series", series);
-    // console.log("docNum", docNum);
+    console.log("from date", fromDateOne);
+    console.log("to date", toDateTwo);
+    console.log("status", status);
+    console.log("warehouse", warehouse);
+    console.log("series", series);
+    console.log("docNum", docNum);
 
-    //e.preventDefault();
+    e.preventDefault();
+
+    const postData = {
+      fromDateOne,
+      toDateTwo,
+      status,
+      warehouse,
+      series,
+      docNum,
+    };
 
     axios
-      .get("http://localhost:8003/ProductionOrderAPI")
+      .post("http://localhost:9003/ProductionOrderAPI", postData)
       .then(function (response) {
-        const data = response.data.body;
+        const newData = response.data.body;
 
         console.log("response.data : ", response.data);
         console.log("Initial List : ", initialList);
@@ -131,25 +140,26 @@ function ProductionOrderList() {
 
         console.log("response.data.body[0] : ", response.data.body[0]);
 
-        console.log("first API list destructure array", data.body[0]); //showing the data
-        console.log("docEntry", data[0].warehouse); //showing the data
+        const newList = newData;
+        setList(newList);
+        console.log("setlist", newList);
+
+        //console.log("first API list destructure array", data.body[0]); //showing the data
+        // console.log("docEntry", data[0].warehouse); //showing the data
         // console.log("docEntry", data[1].docEntry); //showing the data
         // console.log("docEntry", data[2].docEntry); //showing the data
         // console.log("docEntry", data[3].docEntry); //showing the data
 
-        const newList = data;
+        //const arrayItem = [newdata[0]];
 
-        const arrayItem = [data[0]];
+        // console.log("Square Bracket", [arrayItem]);
 
-        console.log("Square Bracket", [arrayItem]);
+        // console.log("Curly Bracket", { arrayItem });
+        // console.log("Curly, Square Brackets", [{ arrayItem }]);
+        // console.log("initialList", initialList);
+        // console.log("dataAPIList", data);
 
-        console.log("Curly Bracket", { arrayItem });
-        console.log("Curly, Square Brackets", [{ arrayItem }]);
-        console.log("initialList", initialList);
-        console.log("dataAPIList", data);
-
-        setList(newList);
-        console.log("setlist", newList);
+        //setList(newList);
       })
       .catch(function (error) {
         console.log("Inside Catch Block", error);
@@ -186,8 +196,8 @@ function ProductionOrderList() {
               </SoftTypography>
               <SoftInput
                 type="date"
-                // value={fromDateOne}
-                // onChange={(e) => setFromDateOne(e.target.value)}
+                value={fromDateOne}
+                onChange={(e) => setFromDateOne(e.target.value)}
                 placeholder="Enter From Order Date..."
                 icon={{
                   component: "search",
@@ -204,8 +214,8 @@ function ProductionOrderList() {
               <SoftBox ml={2}>
                 <SoftInput
                   type="date"
-                  // value={toDateTwo}
-                  // onChange={(e) => setToDateTwo(e.target.value)}
+                  value={toDateTwo}
+                  onChange={(e) => setToDateTwo(e.target.value)}
                   placeholder="Enter To Order Date..."
                   icon={{
                     component: "search",
@@ -224,8 +234,8 @@ function ProductionOrderList() {
                 <SoftInput
                   type="number"
                   placeholder="Document Number..."
-                  // value={docNum}
-                  // onChange={(e) => setDocNum(e.target.value)}
+                  value={docNum}
+                  onChange={(e) => setDocNum(e.target.value)}
                   icon={{
                     component: "search",
                     direction: "left",
@@ -244,8 +254,8 @@ function ProductionOrderList() {
               <SoftBox ml={7}>
                 <select
                   id="dropdown"
-                  // value={status}
-                  // onChange={(e) => setStatus(e.target.value)}
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
                   style={{
                     width: "190px",
                     height: "37px",
@@ -256,8 +266,8 @@ function ProductionOrderList() {
                   <option value="" disabled selected hidden>
                     Enter Order Status...
                   </option>
-                  <option value="planned">Planned</option>
-                  <option value="receipt">Receipt</option>
+                  <option value="string">Planned</option>
+                  <option value="string">Receipt</option>
                 </select>
               </SoftBox>
             </SoftBox>
@@ -270,8 +280,8 @@ function ProductionOrderList() {
               <SoftBox ml={8}>
                 <SoftInput
                   placeholder="Enter Warehouse..."
-                  // value={warehouse}
-                  // onChange={(e) => setWarehouse(e.target.value)}
+                  value={warehouse}
+                  onChange={(e) => setWarehouse(e.target.value)}
                   icon={{
                     component: "search",
                     direction: "left",
@@ -288,8 +298,8 @@ function ProductionOrderList() {
               <SoftBox ml={13}>
                 <SoftInput
                   placeholder="Enter Series..."
-                  // value={series}
-                  // onChange={(e) => setSeries(e.target.value)}
+                  value={series}
+                  onChange={(e) => setSeries(e.target.value)}
                   icon={{
                     component: "search",
                     direction: "left",
